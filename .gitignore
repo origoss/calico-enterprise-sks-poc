@@ -1,0 +1,6 @@
+*~
+/exoscale-config.toml
+/license.yml
+/sks.kubeconfig
+/tigera-partners-origoss-auth.json
+/.direnv/
