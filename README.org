@@ -53,7 +53,7 @@ helm install my-longhorn longhorn      \
 
 [[file:deploy-longhorn.gif]]
 
-Let's create a StorageClass =tigera-elasticsearch=.
+Let's create a StorageClass called =tigera-elasticsearch=.
 
 The content of the =storageclass-tigera-elasticsearch.yaml= file is:
 
@@ -192,11 +192,10 @@ kubectl create -f license.yml
 After performing the above steps the Calico Enterprise is *not* fully
 functional.
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl get tigerastatus
 #+end_src
 
-#+RESULTS:
 #+begin_example
 NAME                          AVAILABLE   PROGRESSING   DEGRADED   SINCE
 apiserver                     True        False         False      8m23s
@@ -233,7 +232,7 @@ Let's investigate what went wrong during the deployment.
 
 There are some suspicious log messages:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl logs -p --tail=10 -n tigera-eck-operator elastic-operator-0
 #+end_src
 
@@ -253,7 +252,7 @@ to access the =10.96.0.1:443= TCP port.
 
 This IP address belongs to the =kubernetes.default= service.
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl describe svc/kubernetes
 #+end_src
 
@@ -294,7 +293,7 @@ kubectl get networkpolicies.crd.projectcalico.org -n tigera-eck-operator
 
 It has the following rules:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl describe networkpolicies.crd.projectcalico.org \
         allow-tigera.elastic-operator-access -n tigera-eck-operator
 #+end_src
@@ -355,7 +354,7 @@ connections at port *30925*.
 
 We can see similar log messages in another container too:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl logs -p --tail=10 -n calico-system \
         -l k8s-app=es-calico-kube-controllers
 #+end_src
@@ -401,7 +400,7 @@ spec:
 
 Let's deploy it:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl apply -f permissive-networkpolicy.yaml -n tigera-eck-operator
 #+end_src
 
@@ -410,7 +409,7 @@ kubectl apply -f permissive-networkpolicy.yaml -n tigera-eck-operator
 
 After a while, let's check again the TigeraStatus resources:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl get tigerastatus
 #+end_src
 
@@ -441,7 +440,7 @@ It's not perfect yet.
 Let's deploy the same permissive NetworkPolicy into the
 =calico-system= namespace.
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl apply -f permissive-networkpolicy.yaml -n calico-system
 #+end_src
 
@@ -450,7 +449,7 @@ kubectl apply -f permissive-networkpolicy.yaml -n calico-system
 
 Let's wait a couple of minutes then TigerStatuses look like this:
 
-#+begin_src bash :results output
+#+begin_src bash :results output :exports both
 kubectl get tigerastatus
 #+end_src
 
